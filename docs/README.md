@@ -1,4 +1,4 @@
-# Duke User Guide
+# Dbot User Guide
 
 // Update the title above to match the actual product name
 
