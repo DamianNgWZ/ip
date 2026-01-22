@@ -28,11 +28,11 @@ public class Dbot {
                 } else if (inputLowerCase.startsWith("delete ")) {
                     deleteTask(tasks, input);
                 } else if (inputLowerCase.startsWith("todo ")) {
-                    addTask(tasks, input, "todo");
+                    addTask(tasks, input, TaskType.TODO);
                 } else if (inputLowerCase.startsWith("deadline ")) {
-                    addTask(tasks, input, "deadline");
+                    addTask(tasks, input, TaskType.DEADLINE);
                 } else if (inputLowerCase.startsWith("event ")) {
-                    addTask(tasks, input, "event");
+                    addTask(tasks, input, TaskType.EVENT);
                 } else { // Unknown command
                     throw new DbotException("Unknown command! Please try valid command");
                 }
@@ -105,12 +105,11 @@ public class Dbot {
         }
     }
 
-    private static void addTask(List<Task> tasks, String input, String type) throws DbotException {
+    private static void addTask(List<Task> tasks, String input, TaskType type) throws DbotException {
         Task task = switch (type) {
-            case "todo" -> Todo.parse(input);
-            case "deadline" -> Deadline.parse(input);
-            case "event" -> Event.parse(input);
-            default -> throw new DbotException("OOPS!!! Unknown task type.");
+            case TODO -> Todo.parse(input);
+            case DEADLINE -> Deadline.parse(input);
+            case EVENT -> Event.parse(input);
         };
 
         tasks.add(task);
