@@ -85,18 +85,12 @@ public class Dbot {
 
     private static void addTask(List<Task> tasks, String input, String type) {
         try {
-            Task task = null;
-            switch (type) {
-            case "todo":
-                task = Todo.parse(input);
-                break;
-            case "deadline":
-                task = Deadline.parse(input);
-                break;
-            case "event":
-                task = Event.parse(input);
-                break;
-            }
+            Task task = switch (type) {
+            case "todo" -> Todo.parse(input);
+            case "deadline" -> Deadline.parse(input);
+            case "event" -> Event.parse(input);
+            default -> null;
+            };
 
             if (task != null) {
                 tasks.add(task);
