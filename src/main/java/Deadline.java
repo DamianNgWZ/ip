@@ -11,16 +11,16 @@ public class Deadline extends Task {
         return "[D]" + super.toString() + " (by: " + by + ")";
     }
 
-    public static Deadline parse(String input) {
+    public static Deadline parse(String input) throws DbotException{
         int byIndex = input.indexOf("/by");
         if (byIndex == -1) {
-            throw new IllegalArgumentException("Please specify deadline with /by");
+            throw new DbotException("Please specify deadline with /by");
         }
         String description = input.substring(9, byIndex).trim();
         String by = input.substring(byIndex + 3).trim();
 
         if (description.isEmpty() || by.isEmpty()) {
-            throw new IllegalArgumentException("Description and deadline cannot be empty.");
+            throw new DbotException("Description and deadline cannot be empty.");
         }
         return new Deadline(description, by);
     }

@@ -9,10 +9,10 @@ public class Todo extends Task {
         return "[T]" + super.toString();
     }
 
-    public static Todo parse(String input) {
+    public static Todo parse(String input) throws DbotException{
         String description = input.substring(5).trim();
         if (description.isEmpty()) {
-            throw new IllegalArgumentException("The description of a todo cannot be empty.");
+            throw new DbotException("The description of a todo cannot be empty.");
         }
         return new Todo(description);
     }

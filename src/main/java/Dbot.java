@@ -16,23 +16,26 @@ public class Dbot {
             String inputLowerCase = input.toLowerCase();
             System.out.println(LINE);
 
-            if (inputLowerCase.equals("bye")) { // Terminating condition
-                System.out.println("Bye. Hope to see you again soon!");
-                System.out.println(LINE);
-                break;
-            } else if (inputLowerCase.equals("list")) { // Print list
-                showList(tasks);
-            } else if (inputLowerCase.startsWith("mark ") || inputLowerCase.startsWith("unmark ")) {
-                updateTask(tasks, input);
-            } else if (inputLowerCase.startsWith("todo ")) {
-                addTask(tasks, input, "todo");
-            } else if (inputLowerCase.startsWith("deadline ")) {
-                addTask(tasks, input, "deadline");
-            } else if (inputLowerCase.startsWith("event ")) {
-                addTask(tasks, input, "event");
-            } else { // Add to list
-                tasks.add(new Task(input));
-                System.out.println("added: " + input);
+            try {
+                if (inputLowerCase.equals("bye")) { // Terminating condition
+                    System.out.println("Bye. Hope to see you again soon!");
+                    System.out.println(LINE);
+                    break;
+                } else if (inputLowerCase.equals("list")) { // Print list
+                    showList(tasks);
+                } else if (inputLowerCase.startsWith("mark ") || inputLowerCase.startsWith("unmark ")) {
+                    updateTask(tasks, input);
+                } else if (inputLowerCase.startsWith("todo ")) {
+                    addTask(tasks, input, "todo");
+                } else if (inputLowerCase.startsWith("deadline ")) {
+                    addTask(tasks, input, "deadline");
+                } else if (inputLowerCase.startsWith("event ")) {
+                    addTask(tasks, input, "event");
+                } else { // Unknown command
+                    throw new DbotException("Unknown command! Please try valid command");
+                }
+            } catch (DbotException e) {
+                System.out.println(e.getMessage());
             }
             System.out.println(LINE);
         }
@@ -59,47 +62,41 @@ public class Dbot {
         }
     }
 
-    private static void updateTask(List<Task> tasks, String input) {
+    private static void updateTask(List<Task> tasks, String input) throws DbotException {
         try {
             String lowerInput = input.toLowerCase();
             boolean isMark = lowerInput.startsWith("mark ");
             int index = Integer.parseInt(lowerInput.substring(isMark ? 5 : 7).trim()) - 1;
 
-            if (index >= 0 && index < tasks.size()) {
-                Task task = tasks.get(index);
-                if (isMark) {
-                    task.markAsDone();
-                    System.out.println("Nice! I've marked this task as done:");
-                } else {
-                    task.markAsUndone();
-                    System.out.println("OK, I've marked this task as not done yet:");
-                }
-                System.out.println("  " + task);
-            } else {
-                System.out.println("Task number does not exist");
+            if (index < 0 || index >= tasks.size()) {
+                throw new DbotException("OOPS!!! Task number does not exist.");
             }
-        } catch (Exception e) {
-            System.out.println("Invalid input");
+
+            Task task = tasks.get(index);
+            if (isMark) {
+                task.markAsDone();
+                System.out.println("Nice! I've marked this task as done:");
+            } else {
+                task.markAsUndone();
+                System.out.println("OK, I've marked this task as not done yet:");
+            }
+            System.out.println("  " + task);
+        } catch (NumberFormatException e) {
+            throw new DbotException("OOPS!!! Please provide a valid task number!");
         }
     }
 
-    private static void addTask(List<Task> tasks, String input, String type) {
-        try {
-            Task task = switch (type) {
+    private static void addTask(List<Task> tasks, String input, String type) throws DbotException {
+        Task task = switch (type) {
             case "todo" -> Todo.parse(input);
             case "deadline" -> Deadline.parse(input);
             case "event" -> Event.parse(input);
-            default -> null;
-            };
+            default -> throw new DbotException("OOPS!!! Unknown task type.");
+        };
 
-            if (task != null) {
-                tasks.add(task);
-                System.out.println("Got it. I've added this task:");
-                System.out.println("  " + task);
-                System.out.println("Now you have " + tasks.size() + " tasks in the list.");
-            }
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
-        }
+        tasks.add(task);
+        System.out.println("Got it. I've added this task:");
+        System.out.println("  " + task);
+        System.out.println("Now you have " + tasks.size() + " tasks in the list.");
     }
 }

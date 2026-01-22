@@ -13,12 +13,12 @@ public class Event extends Task {
         return "[E]" + super.toString() + " (from: " + from + " to: " + to + ")";
     }
 
-    public static Event parse(String input) {
+    public static Event parse(String input) throws DbotException{
         int fromIndex = input.indexOf("/from");
         int toIndex = input.indexOf("/to");
 
         if (fromIndex == -1 || toIndex == -1) { // ensure from and to exists in input
-            throw new IllegalArgumentException("Please specify event with /from and /to");
+            throw new DbotException("Please specify event with /from and /to");
         }
 
         String description = input.substring(6, fromIndex).trim();
@@ -26,7 +26,7 @@ public class Event extends Task {
         String to = input.substring(toIndex + 3).trim();
 
         if (description.isEmpty() || from.isEmpty() || to.isEmpty()) { // ensure from to not empty
-            throw new IllegalArgumentException("Description, start time and end time cannot be empty.");
+            throw new DbotException("Description, start time and end time cannot be empty.");
         }
         return new Event(description, from, to);
     }
