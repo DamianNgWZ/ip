@@ -25,6 +25,8 @@ public class Dbot {
                     showList(tasks);
                 } else if (inputLowerCase.startsWith("mark ") || inputLowerCase.startsWith("unmark ")) {
                     updateTask(tasks, input);
+                } else if (inputLowerCase.startsWith("delete ")) {
+                    deleteTask(tasks, input);
                 } else if (inputLowerCase.startsWith("todo ")) {
                     addTask(tasks, input, "todo");
                 } else if (inputLowerCase.startsWith("deadline ")) {
@@ -81,6 +83,23 @@ public class Dbot {
                 System.out.println("OK, I've marked this task as not done yet:");
             }
             System.out.println("  " + task);
+        } catch (NumberFormatException e) {
+            throw new DbotException("OOPS!!! Please provide a valid task number!");
+        }
+    }
+
+    private static void deleteTask(List<Task> tasks, String input) throws DbotException {
+        try {
+            int index = Integer.parseInt(input.substring(7).trim()) - 1;
+
+            if (index < 0 || index >= tasks.size()) {
+                throw new DbotException("OOPS!!! Task number does not exist.");
+            }
+
+            Task removedTask = tasks.remove(index);
+            System.out.println("Noted. I've removed this task:");
+            System.out.println("  " + removedTask);
+            System.out.println("Now you have " + tasks.size() + " tasks in the list.");
         } catch (NumberFormatException e) {
             throw new DbotException("OOPS!!! Please provide a valid task number!");
         }
