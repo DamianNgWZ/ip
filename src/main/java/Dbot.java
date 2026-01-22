@@ -22,8 +22,14 @@ public class Dbot {
                 break;
             } else if (inputLowerCase.equals("list")) { // Print list
                 showList(tasks);
-            } else if (inputLowerCase.startsWith("mark ") || input.toLowerCase().startsWith("unmark ")) {
+            } else if (inputLowerCase.startsWith("mark ") || inputLowerCase.startsWith("unmark ")) {
                 updateTask(tasks, input);
+            } else if (inputLowerCase.startsWith("todo ")) {
+                addTask(tasks, input, "todo");
+            } else if (inputLowerCase.startsWith("deadline ")) {
+                addTask(tasks, input, "deadline");
+            } else if (inputLowerCase.startsWith("event ")) {
+                addTask(tasks, input, "event");
             } else { // Add to list
                 tasks.add(new Task(input));
                 System.out.println("added: " + input);
@@ -47,7 +53,7 @@ public class Dbot {
         } else {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < tasks.size(); i++) {
-                sb.append(i + 1).append(". ").append(tasks.get(i)).append("\n");
+                sb.append(i + 1).append(".").append(tasks.get(i)).append("\n");
             }
             System.out.print(sb);
         }
@@ -74,6 +80,32 @@ public class Dbot {
             }
         } catch (Exception e) {
             System.out.println("Invalid input");
+        }
+    }
+
+    private static void addTask(List<Task> tasks, String input, String type) {
+        try {
+            Task task = null;
+            switch (type) {
+            case "todo":
+                task = Todo.parse(input);
+                break;
+            case "deadline":
+                task = Deadline.parse(input);
+                break;
+            case "event":
+                task = Event.parse(input);
+                break;
+            }
+
+            if (task != null) {
+                tasks.add(task);
+                System.out.println("Got it. I've added this task:");
+                System.out.println("  " + task);
+                System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
         }
     }
 }
