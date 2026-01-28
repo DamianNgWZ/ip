@@ -2,13 +2,15 @@ public abstract class Task {
     protected String description;
     protected boolean isDone;
 
+    public abstract String toFileFormat();
+
     public Task(String description) {
         this.description = description;
         this.isDone = false;
     }
 
     public String getStatusIcon() {
-        return isDone ? "X" : " "; // mark task done with X
+        return this.isDone ? "X" : " "; // mark task done with X
     }
 
     public void markAsDone() {
@@ -21,6 +23,6 @@ public abstract class Task {
 
     @Override
     public String toString() {
-        return "[" + getStatusIcon() + "] " + description;
+        return "[" + getStatusIcon() + "] " + this.description;
     }
 }
