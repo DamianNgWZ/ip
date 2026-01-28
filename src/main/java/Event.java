@@ -8,11 +8,6 @@ public class Event extends Task {
         this.to = to;
     }
 
-    @Override
-    public String toString() {
-        return "[E]" + super.toString() + " (from: " + from + " to: " + to + ")";
-    }
-
     public static Event parse(String input) throws DbotException{
         int fromIndex = input.indexOf("/from");
         int toIndex = input.indexOf("/to");
@@ -29,5 +24,29 @@ public class Event extends Task {
             throw new DbotException("Description, start time and end time cannot be empty.");
         }
         return new Event(description, from, to);
+    }
+
+    public static Event fromFileFormat(String line) {
+        String[] parts = line.split("\\|");
+        for (int i = 0; i < parts.length; i++) {
+            parts[i] = parts[i].trim();
+        }
+
+        Event event = new Event(parts[2], parts[3], parts[4]);
+        if (parts[1].equals("DONE")) {
+            event.markAsDone();
+        }
+        return event;
+    }
+
+    @Override
+    public String toFileFormat() {
+        return "E | " + (this.isDone ? "DONE" : "NOT DONE") + " | " + this.description + " | "
+                + this.from + " | " + this.to;
+    }
+
+    @Override
+    public String toString() {
+        return "[E]" + super.toString() + " (from: " + from + " to: " + to + ")";
     }
 }

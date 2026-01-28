@@ -1,15 +1,38 @@
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.IOException;
 
 public class Dbot {
+    private List<Task> tasks;
+    private final FileManager fileManager;
     private static final String LINE = "____________________________________________________________";
 
-    public static void main(String[] args) {
-        printGreeting();
+    public Dbot() {
+        this.fileManager = new FileManager("./data/dbot.txt");
+        this.tasks = loadTasks();
+    }
 
+    private List<Task> loadTasks() {
+        try {
+            return this.fileManager.load();
+        } catch (IOException e) {
+            System.out.println("Error loading tasks: " + e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+    private void saveTasks() {
+        try {
+            fileManager.save(tasks);
+        } catch (IOException e) {
+            System.out.println("Error saving tasks: " + e.getMessage());
+        }
+    }
+
+    public void run() {
+        printGreeting();
         Scanner sc = new Scanner(System.in);
-        List<Task> tasks = new ArrayList<>();
 
         while (true) {
             String input = sc.nextLine().trim();
@@ -22,19 +45,21 @@ public class Dbot {
                     System.out.println(LINE);
                     break;
                 } else if (inputLowerCase.equals("list")) { // Print list
-                    showList(tasks);
+                    showList();
+                } else if (inputLowerCase.equals("help")) { // Show help
+                    showHelp();
                 } else if (inputLowerCase.startsWith("mark ") || inputLowerCase.startsWith("unmark ")) {
-                    updateTask(tasks, input);
+                    updateTask(input);
                 } else if (inputLowerCase.startsWith("delete ")) {
-                    deleteTask(tasks, input);
+                    deleteTask(input);
                 } else if (inputLowerCase.startsWith("todo ")) {
-                    addTask(tasks, input, TaskType.TODO);
+                    addTask(input, TaskType.TODO);
                 } else if (inputLowerCase.startsWith("deadline ")) {
-                    addTask(tasks, input, TaskType.DEADLINE);
+                    addTask(input, TaskType.DEADLINE);
                 } else if (inputLowerCase.startsWith("event ")) {
-                    addTask(tasks, input, TaskType.EVENT);
+                    addTask(input, TaskType.EVENT);
                 } else { // Unknown command
-                    throw new DbotException("Unknown command! Please try valid command");
+                    throw new DbotException("Unknown command! Type 'help' to see available commands.");
                 }
             } catch (DbotException e) {
                 System.out.println(e.getMessage());
@@ -44,14 +69,14 @@ public class Dbot {
         sc.close();
     }
 
-    private static void printGreeting() {
+    private void printGreeting() {
         System.out.println(LINE);
         System.out.println("Hello! I'm Dbot");
         System.out.println("What can I do for you?");
         System.out.println(LINE);
     }
 
-    private static void showList(List<Task> tasks) {
+    private void showList() {
         System.out.println("Here are the tasks in your list:");
         if (tasks.isEmpty()) {
             System.out.println("No entries currently. Please add an entry");
@@ -64,7 +89,20 @@ public class Dbot {
         }
     }
 
-    private static void updateTask(List<Task> tasks, String input) throws DbotException {
+    private void showHelp() {
+        System.out.println("Available commands:");
+        System.out.println("  todo <description> - Add a todo task");
+        System.out.println("  deadline <description> /by <date> - Add a deadline task");
+        System.out.println("  event <description> /from <start> /to <end> - Add an event task");
+        System.out.println("  list - Show all tasks");
+        System.out.println("  mark <task number> - Mark a task as done");
+        System.out.println("  unmark <task number> - Mark a task as not done");
+        System.out.println("  delete <task number> - Delete a task");
+        System.out.println("  help - Show this help message");
+        System.out.println("  bye - Exit the program");
+    }
+
+    private void updateTask(String input) throws DbotException {
         try {
             String lowerInput = input.toLowerCase();
             boolean isMark = lowerInput.startsWith("mark ");
@@ -83,12 +121,13 @@ public class Dbot {
                 System.out.println("OK, I've marked this task as not done yet:");
             }
             System.out.println("  " + task);
+            saveTasks();  // Save after marking/unmarking
         } catch (NumberFormatException e) {
             throw new DbotException("OOPS!!! Please provide a valid task number!");
         }
     }
 
-    private static void deleteTask(List<Task> tasks, String input) throws DbotException {
+    private void deleteTask(String input) throws DbotException {
         try {
             int index = Integer.parseInt(input.substring(7).trim()) - 1;
 
@@ -100,12 +139,13 @@ public class Dbot {
             System.out.println("Noted. I've removed this task:");
             System.out.println("  " + removedTask);
             System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+            saveTasks();  // Save after deleting
         } catch (NumberFormatException e) {
             throw new DbotException("OOPS!!! Please provide a valid task number!");
         }
     }
 
-    private static void addTask(List<Task> tasks, String input, TaskType type) throws DbotException {
+    private void addTask(String input, TaskType type) throws DbotException {
         Task task = switch (type) {
             case TODO -> Todo.parse(input);
             case DEADLINE -> Deadline.parse(input);
@@ -116,5 +156,10 @@ public class Dbot {
         System.out.println("Got it. I've added this task:");
         System.out.println("  " + task);
         System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+        saveTasks();  // Save after adding
+    }
+
+    public static void main(String[] args) {
+        new Dbot().run();
     }
 }

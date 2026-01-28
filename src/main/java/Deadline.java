@@ -6,11 +6,6 @@ public class Deadline extends Task {
         this.by = by;
     }
 
-    @Override
-    public String toString() {
-        return "[D]" + super.toString() + " (by: " + by + ")";
-    }
-
     public static Deadline parse(String input) throws DbotException{
         int byIndex = input.indexOf("/by");
         if (byIndex == -1) {
@@ -24,4 +19,28 @@ public class Deadline extends Task {
         }
         return new Deadline(description, by);
     }
+
+    public static Deadline fromFileFormat(String line) {
+        String[] parts = line.split("\\|");
+        for (int i = 0; i < parts.length; i++) {
+            parts[i] = parts[i].trim();
+        }
+
+        Deadline deadline = new Deadline(parts[2], parts[3]);
+        if (parts[1].equals("DONE")) {
+            deadline.markAsDone();
+        }
+        return deadline;
+    }
+
+    @Override
+    public String toFileFormat() {
+        return "D | " + (this.isDone ? "DONE" : "NOT DONE") + " | " + this.description + " | " + this.by;
+    }
+
+    @Override
+    public String toString() {
+        return "[D]" + super.toString() + " (by: " + this.by + ")";
+    }
+
 }
