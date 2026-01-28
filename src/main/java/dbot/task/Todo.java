@@ -1,5 +1,7 @@
 package dbot.task;
 
+import dbot.exception.DbotException;
+
 public class Todo extends Task {
 
     public Todo(String description) {
