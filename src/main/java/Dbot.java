@@ -31,6 +31,7 @@ public class Dbot {
                 case BYE: // Terminating condition
                     ui.showGoodbye();
                     ui.showLine();
+                    ui.close();
                     return; // Exit run() method
                 case LIST: // Print list
                     showList();
