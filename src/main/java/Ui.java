@@ -53,10 +53,10 @@ public class Ui {
     }
 
     public void showTaskList(String list) {
-        System.out.println("Here are the tasks in your list:");
         if (list.isEmpty()) {
-            System.out.println("No entries currently. Please add an entry");
+            System.out.println("No tasks in your list yet!");
         } else {
+            System.out.println("Here are the tasks in your list:");
             System.out.print(list);
         }
     }
