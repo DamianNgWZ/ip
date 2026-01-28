@@ -5,17 +5,17 @@ import java.io.IOException;
 
 public class Dbot {
     private List<Task> tasks;
-    private final FileManager fileManager;
+    private final Storage storage;
     private static final String LINE = "____________________________________________________________";
 
     public Dbot() {
-        this.fileManager = new FileManager("./data/dbot.txt");
+        this.storage = new Storage("./data/dbot.txt");
         this.tasks = loadTasks();
     }
 
     private List<Task> loadTasks() {
         try {
-            return this.fileManager.load();
+            return this.storage.load();
         } catch (IOException e) {
             System.out.println("Error loading tasks: " + e.getMessage());
             return new ArrayList<>();
@@ -24,7 +24,7 @@ public class Dbot {
 
     private void saveTasks() {
         try {
-            fileManager.save(tasks);
+            this.storage.save(tasks);
         } catch (IOException e) {
             System.out.println("Error saving tasks: " + e.getMessage());
         }
