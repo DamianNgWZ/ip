@@ -1,4 +1,4 @@
-# Dbot User Guide
+# dbot.Dbot User Guide
 
 // Update the title above to match the actual product name
 

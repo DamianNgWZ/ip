@@ -1,4 +1,13 @@
+package dbot;
+
 import java.io.IOException;
+import dbot.exception.DbotException;
+import dbot.parser.CommandType;
+import dbot.parser.Parser;
+import dbot.storage.Storage;
+import dbot.task.Task;
+import dbot.tasklist.TaskList;
+import dbot.ui.Ui;
 
 public class Dbot {
     private TaskList tasks;

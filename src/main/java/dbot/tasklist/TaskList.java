@@ -1,5 +1,9 @@
+package dbot.tasklist;
+
 import java.util.ArrayList;
 import java.util.List;
+import dbot.exception.DbotException;
+import dbot.task.Task;
 
 public class TaskList {
     private final List<Task> tasks;
@@ -18,14 +22,14 @@ public class TaskList {
 
     public Task delete(int index) throws DbotException {
         if (index < 0 || index >= tasks.size()) {
-            throw new DbotException("OOPS!!! Task number does not exist.");
+            throw new DbotException("OOPS!!! dbot.task.Task number does not exist.");
         }
         return tasks.remove(index);
     }
 
     public Task get(int index) throws DbotException {
         if (index < 0 || index >= tasks.size()) {
-            throw new DbotException("OOPS!!! Task number does not exist.");
+            throw new DbotException("OOPS!!! dbot.task.Task number does not exist.");
         }
         return tasks.get(index);
     }

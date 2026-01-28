@@ -1,9 +1,15 @@
+package dbot.storage;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import dbot.task.Deadline;
+import dbot.task.Event;
+import dbot.task.Task;
+import dbot.task.Todo;
 
 public class Storage {
     private final String filePath;
@@ -40,7 +46,7 @@ public class Storage {
     }
 
     public void save(List<Task> tasks) throws IOException {
-        // Create directory if it doesn't exist - Propagate up to Dbot to handle
+        // Create directory if it doesn't exist - Propagate up to dbot.Dbot to handle
         File file = new File(filePath);
         File parentDir = file.getParentFile();
         if (parentDir != null && !parentDir.exists()) {

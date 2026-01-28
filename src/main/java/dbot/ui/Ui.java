@@ -1,3 +1,5 @@
+package dbot.ui;
+
 import java.util.Scanner;
 
 public class Ui {
@@ -10,7 +12,7 @@ public class Ui {
 
     public void showWelcome() {
         showLine();
-        System.out.println("Hello! I'm Dbot");
+        System.out.println("Hello! I'm dbot.Dbot");
         System.out.println("What can I do for you?");
         showLine();
     }
