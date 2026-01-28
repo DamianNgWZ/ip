@@ -26,9 +26,23 @@ public class Event extends Task {
         return new Event(description, from, to);
     }
 
+    public static Event fromFileFormat(String line) {
+        String[] parts = line.split("\\|");
+        for (int i = 0; i < parts.length; i++) {
+            parts[i] = parts[i].trim();
+        }
+
+        Event event = new Event(parts[2], parts[3], parts[4]);
+        if (parts[1].equals("DONE")) {
+            event.markAsDone();
+        }
+        return event;
+    }
+
     @Override
     public String toFileFormat() {
-        return "E | " + (this.isDone ? "DONE" : "NOT DONE") + " | " + this.description + " | " + this.from + " | " + this.to;
+        return "E | " + (this.isDone ? "DONE" : "NOT DONE") + " | " + this.description + " | "
+                + this.from + " | " + this.to;
     }
 
     @Override
