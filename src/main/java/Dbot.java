@@ -26,6 +26,8 @@ public class Dbot {
                     break;
                 } else if (inputLowerCase.equals("list")) { // Print list
                     showList();
+                } else if (inputLowerCase.equals("help")) { // Show help
+                    showHelp();
                 } else if (inputLowerCase.startsWith("mark ") || inputLowerCase.startsWith("unmark ")) {
                     updateTask(input);
                 } else if (inputLowerCase.startsWith("delete ")) {
@@ -37,7 +39,7 @@ public class Dbot {
                 } else if (inputLowerCase.startsWith("event ")) {
                     addTask(input, TaskType.EVENT);
                 } else { // Unknown command
-                    throw new DbotException("Unknown command! Please try valid command");
+                    throw new DbotException("Unknown command! Type 'help' to see available commands.");
                 }
             } catch (DbotException e) {
                 System.out.println(e.getMessage());
@@ -65,6 +67,19 @@ public class Dbot {
             }
             System.out.print(sb);
         }
+    }
+
+    private void showHelp() {
+        System.out.println("Available commands:");
+        System.out.println("  todo <description> - Add a todo task");
+        System.out.println("  deadline <description> /by <date> - Add a deadline task");
+        System.out.println("  event <description> /from <start> /to <end> - Add an event task");
+        System.out.println("  list - Show all tasks");
+        System.out.println("  mark <task number> - Mark a task as done");
+        System.out.println("  unmark <task number> - Mark a task as not done");
+        System.out.println("  delete <task number> - Delete a task");
+        System.out.println("  help - Show this help message");
+        System.out.println("  bye - Exit the program");
     }
 
     private void updateTask(String input) throws DbotException {
