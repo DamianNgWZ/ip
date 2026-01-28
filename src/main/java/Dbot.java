@@ -92,8 +92,8 @@ public class Dbot {
     private void showHelp() {
         System.out.println("Available commands:");
         System.out.println("  todo <description> - Add a todo task");
-        System.out.println("  deadline <description> /by <date> - Add a deadline task");
-        System.out.println("  event <description> /from <start> /to <end> - Add an event task");
+        System.out.println("  deadline <description> /by <dd-MM-yyyy> - Add a deadline task");
+        System.out.println("  event <description> /from <dd-MM-yyyy> /to <dd-MM-yyyy> - Add an event task");
         System.out.println("  list - Show all tasks");
         System.out.println("  mark <task number> - Mark a task as done");
         System.out.println("  unmark <task number> - Mark a task as not done");
