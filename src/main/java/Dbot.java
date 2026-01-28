@@ -5,7 +5,7 @@ import java.io.IOException;
 
 public class Dbot {
     private List<Task> tasks;
-    private FileManager fileManager;
+    private final FileManager fileManager;
     private static final String LINE = "____________________________________________________________";
 
     public Dbot() {
