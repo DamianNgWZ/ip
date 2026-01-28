@@ -1,13 +1,33 @@
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.IOException;
 
 public class Dbot {
-    private final List<Task> tasks;
+    private List<Task> tasks;
+    private FileManager fileManager;
     private static final String LINE = "____________________________________________________________";
 
     public Dbot() {
-        this.tasks = new ArrayList<>();
+        this.fileManager = new FileManager("./data/dbot.txt");
+        this.tasks = loadTasks();
+    }
+
+    private List<Task> loadTasks() {
+        try {
+            return this.fileManager.load();
+        } catch (IOException e) {
+            System.out.println("Error loading tasks: " + e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+    private void saveTasks() {
+        try {
+            fileManager.save(tasks);
+        } catch (IOException e) {
+            System.out.println("Error saving tasks: " + e.getMessage());
+        }
     }
 
     public void run() {
@@ -101,6 +121,7 @@ public class Dbot {
                 System.out.println("OK, I've marked this task as not done yet:");
             }
             System.out.println("  " + task);
+            saveTasks();  // Save after marking/unmarking
         } catch (NumberFormatException e) {
             throw new DbotException("OOPS!!! Please provide a valid task number!");
         }
@@ -118,6 +139,7 @@ public class Dbot {
             System.out.println("Noted. I've removed this task:");
             System.out.println("  " + removedTask);
             System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+            saveTasks();  // Save after deleting
         } catch (NumberFormatException e) {
             throw new DbotException("OOPS!!! Please provide a valid task number!");
         }
@@ -134,6 +156,7 @@ public class Dbot {
         System.out.println("Got it. I've added this task:");
         System.out.println("  " + task);
         System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+        saveTasks();  // Save after adding
     }
 
     public static void main(String[] args) {
