@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Dbot {
-    private List<Task> tasks;
+    private final List<Task> tasks;
     private static final String LINE = "____________________________________________________________";
 
     public Dbot() {
