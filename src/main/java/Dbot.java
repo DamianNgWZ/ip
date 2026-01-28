@@ -3,13 +3,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Dbot {
+    private List<Task> tasks;
     private static final String LINE = "____________________________________________________________";
 
-    public static void main(String[] args) {
-        printGreeting();
+    public Dbot() {
+        this.tasks = new ArrayList<>();
+    }
 
+    public void run() {
+        printGreeting();
         Scanner sc = new Scanner(System.in);
-        List<Task> tasks = new ArrayList<>();
 
         while (true) {
             String input = sc.nextLine().trim();
@@ -22,17 +25,17 @@ public class Dbot {
                     System.out.println(LINE);
                     break;
                 } else if (inputLowerCase.equals("list")) { // Print list
-                    showList(tasks);
+                    showList();
                 } else if (inputLowerCase.startsWith("mark ") || inputLowerCase.startsWith("unmark ")) {
-                    updateTask(tasks, input);
+                    updateTask(input);
                 } else if (inputLowerCase.startsWith("delete ")) {
-                    deleteTask(tasks, input);
+                    deleteTask(input);
                 } else if (inputLowerCase.startsWith("todo ")) {
-                    addTask(tasks, input, TaskType.TODO);
+                    addTask(input, TaskType.TODO);
                 } else if (inputLowerCase.startsWith("deadline ")) {
-                    addTask(tasks, input, TaskType.DEADLINE);
+                    addTask(input, TaskType.DEADLINE);
                 } else if (inputLowerCase.startsWith("event ")) {
-                    addTask(tasks, input, TaskType.EVENT);
+                    addTask(input, TaskType.EVENT);
                 } else { // Unknown command
                     throw new DbotException("Unknown command! Please try valid command");
                 }
@@ -44,14 +47,14 @@ public class Dbot {
         sc.close();
     }
 
-    private static void printGreeting() {
+    private void printGreeting() {
         System.out.println(LINE);
         System.out.println("Hello! I'm Dbot");
         System.out.println("What can I do for you?");
         System.out.println(LINE);
     }
 
-    private static void showList(List<Task> tasks) {
+    private void showList() {
         System.out.println("Here are the tasks in your list:");
         if (tasks.isEmpty()) {
             System.out.println("No entries currently. Please add an entry");
@@ -64,7 +67,7 @@ public class Dbot {
         }
     }
 
-    private static void updateTask(List<Task> tasks, String input) throws DbotException {
+    private void updateTask(String input) throws DbotException {
         try {
             String lowerInput = input.toLowerCase();
             boolean isMark = lowerInput.startsWith("mark ");
@@ -88,7 +91,7 @@ public class Dbot {
         }
     }
 
-    private static void deleteTask(List<Task> tasks, String input) throws DbotException {
+    private void deleteTask(String input) throws DbotException {
         try {
             int index = Integer.parseInt(input.substring(7).trim()) - 1;
 
@@ -105,7 +108,7 @@ public class Dbot {
         }
     }
 
-    private static void addTask(List<Task> tasks, String input, TaskType type) throws DbotException {
+    private void addTask(String input, TaskType type) throws DbotException {
         Task task = switch (type) {
             case TODO -> Todo.parse(input);
             case DEADLINE -> Deadline.parse(input);
@@ -116,5 +119,9 @@ public class Dbot {
         System.out.println("Got it. I've added this task:");
         System.out.println("  " + task);
         System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+    }
+
+    public static void main(String[] args) {
+        new Dbot().run();
     }
 }
