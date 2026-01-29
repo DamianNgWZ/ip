@@ -11,6 +11,7 @@ import dbot.task.Todo;
  * The Parser handles command recognition, parameter extraction, and task creation.
  */
 public class Parser {
+    private static final int FIND_COMMAND_LENGTH = 5; // Length of "find "
 
     /**
      * Parses the user input string to determine the command type.
@@ -49,6 +50,9 @@ public class Parser {
         if (lowerInput.startsWith("event ")) {
             return CommandType.EVENT;
         }
+        if (lowerInput.startsWith("find")) {
+            return CommandType.FIND;
+        }
 
         return CommandType.UNKNOWN;
     }
@@ -86,5 +90,16 @@ public class Parser {
         } catch (NumberFormatException e) {
             throw new DbotException("OOPS!!! Please provide a valid task number!");
         }
+    }
+
+    /**
+     * Parses the keyword from a find command string.
+     * Extracts the search keyword after the "find " command prefix.
+     *
+     * @param input The full user input string (e.g., "find book").
+     * @return The keyword to search for.
+     */
+    public static String parseKeyword(String input) {
+        return input.substring(FIND_COMMAND_LENGTH).trim();
     }
 }
