@@ -5,16 +5,41 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import dbot.exception.DbotException;
 
+/**
+ * Represents a task with a deadline.
+ * A Deadline task has a description and a date by which it should be completed.
+ */
 public class Deadline extends Task {
+    /** The deadline date for this task. */
     protected LocalDate by;
+
+    /** The date format used for parsing user input (dd-MM-yyyy). */
     private static final DateTimeFormatter INPUT_FORMAT = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+    /** The date format used for displaying dates to the user (MMM dd yyyy). */
     private static final DateTimeFormatter OUTPUT_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy");
 
+    /**
+     * Constructs a Deadline task with the given description and deadline date.
+     *
+     * @param description The description of the deadline task.
+     * @param by The deadline date.
+     */
     public Deadline(String description, LocalDate by) {
         super(description);
         this.by = by;
     }
 
+    /**
+     * Parses user input to create a Deadline task.
+     * Extracts the description and deadline date from the input string.
+     * Expected format: "deadline description /by dd-MM-yyyy"
+     *
+     * @param input The full user input string (e.g., "deadline return book /by 02-12-2019").
+     * @return A new Deadline task with the parsed description and date.
+     * @throws DbotException If the /by keyword is missing, date format is invalid,
+     *                       or description/date is empty.
+     */
     public static Deadline parse(String input) throws DbotException {
         int byIndex = input.indexOf("/by");
         if (byIndex == -1) {
@@ -35,6 +60,13 @@ public class Deadline extends Task {
         }
     }
 
+    /**
+     * Creates a Deadline task from a saved file format string.
+     * Parses the file line and restores the deadline's description, completion status, and date.
+     *
+     * @param line The line from the file (format: "D | DONE/NOT DONE | description | dd-MM-yyyy").
+     * @return A Deadline task restored from the file format.
+     */
     public static Deadline fromFileFormat(String line) {
         String[] parts = line.split("\\|");
         for (int i = 0; i < parts.length; i++) {
@@ -49,6 +81,12 @@ public class Deadline extends Task {
         return deadline;
     }
 
+    /**
+     * Returns the string representation of this deadline for saving to a file.
+     * Format: "D | DONE/NOT DONE | description | dd-MM-yyyy"
+     *
+     * @return The file format string representation.
+     */
     @Override
     public String toFileFormat() {
         return "D | " + (this.isDone ? "DONE" : "NOT DONE") + " | "

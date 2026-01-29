@@ -6,8 +6,19 @@ import dbot.task.Event;
 import dbot.task.Task;
 import dbot.task.Todo;
 
+/**
+ * Parses user input into commands and extracts relevant information.
+ * The Parser handles command recognition, parameter extraction, and task creation.
+ */
 public class Parser {
 
+    /**
+     * Parses the user input string to determine the command type.
+     * Recognizes commands such as bye, list, help, mark, unmark, delete, todo, deadline, and event.
+     *
+     * @param input The full user input string.
+     * @return The CommandType corresponding to the input, or UNKNOWN if not recognized.
+     */
     public static CommandType parseCommand(String input) {
         String lowerInput = input.toLowerCase().trim();
 
@@ -24,6 +35,15 @@ public class Parser {
         return CommandType.UNKNOWN;
     }
 
+    /**
+     * Parses the input string to create a Task object of the appropriate type.
+     * Delegates to the respective task class's parse method (Todo, Deadline, or Event).
+     *
+     * @param input The full user input string containing the task details.
+     * @param type The type of task to create (TODO, DEADLINE, or EVENT).
+     * @return A Task object of the specified type.
+     * @throws DbotException If the task type is invalid or the input format is incorrect.
+     */
     public static Task parseTask(String input, CommandType type) throws DbotException {
         return switch (type) {
             case TODO -> Todo.parse(input);
@@ -33,6 +53,15 @@ public class Parser {
         };
     }
 
+    /**
+     * Parses the task number from a user command string.
+     * Extracts the number after the command prefix and converts it to a zero-based index.
+     *
+     * @param input The full user input string (e.g., "mark 3" or "delete 1").
+     * @param commandPrefix The command word to remove from the input (e.g., "mark " or "delete ").
+     * @return The zero-based index of the task.
+     * @throws DbotException If the task number is invalid, missing, or not a number.
+     */
     public static int parseTaskNumber(String input, String commandPrefix) throws DbotException {
         try {
             return Integer.parseInt(input.substring(commandPrefix.length()).trim()) - 1;
