@@ -5,18 +5,46 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import dbot.exception.DbotException;
 
+/**
+ * Represents an event task with a start and end date.
+ * An Event task has a description, a start date, and an end date.
+ */
 public class Event extends Task {
+    /** The start date of this event. */
     protected LocalDate from;
+
+    /** The end date of this event. */
     protected LocalDate to;
+
+    /** The date format used for parsing user input (dd-MM-yyyy). */
     private static final DateTimeFormatter INPUT_FORMAT = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+    /** The date format used for displaying dates to the user (MMM dd yyyy). */
     private static final DateTimeFormatter OUTPUT_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy");
 
+    /**
+     * Constructs an Event task with the given description, start date, and end date.
+     *
+     * @param description The description of the event.
+     * @param from The start date of the event.
+     * @param to The end date of the event.
+     */
     public Event(String description, LocalDate from, LocalDate to) {
         super(description);
         this.from = from;
         this.to = to;
     }
 
+    /**
+     * Parses user input to create an Event task.
+     * Extracts the description, start date, and end date from the input string.
+     * Expected format: "event description /from dd-MM-yyyy /to dd-MM-yyyy"
+     *
+     * @param input The full user input string (e.g., "event project meeting /from 02-12-2019 /to 03-12-2019").
+     * @return A new Event task with the parsed description and dates.
+     * @throws DbotException If the /from or /to keywords are missing, date format is invalid,
+     *                       or description/dates are empty.
+     */
     public static Event parse(String input) throws DbotException {
         int fromIndex = input.indexOf("/from");
         int toIndex = input.indexOf("/to");
@@ -42,6 +70,13 @@ public class Event extends Task {
         }
     }
 
+    /**
+     * Creates an Event task from a saved file format string.
+     * Parses the file line and restores the event's description, completion status, and dates.
+     *
+     * @param line The line from the file (format: "E | DONE/NOT DONE | description | dd-MM-yyyy | dd-MM-yyyy").
+     * @return An Event task restored from the file format.
+     */
     public static Event fromFileFormat(String line) {
         String[] parts = line.split("\\|");
         for (int i = 0; i < parts.length; i++) {
@@ -57,6 +92,12 @@ public class Event extends Task {
         return event;
     }
 
+    /**
+     * Returns the string representation of this event for saving to a file.
+     * Format: "E | DONE/NOT DONE | description | dd-MM-yyyy | dd-MM-yyyy"
+     *
+     * @return The file format string representation.
+     */
     @Override
     public String toFileFormat() {
         return "E | " + (this.isDone ? "DONE" : "NOT DONE") + " | " + this.description + " | "
