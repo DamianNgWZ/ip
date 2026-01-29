@@ -1,6 +1,9 @@
 package dbot.ui;
 
+import java.util.List;
 import java.util.Scanner;
+
+import dbot.task.Task;
 
 public class Ui {
     private static final String LINE = "____________________________________________________________";
@@ -63,6 +66,22 @@ public class Ui {
         }
     }
 
+    /**
+     * Displays the list of tasks that match the search keyword.
+     *
+     * @param matchingTasks The list of tasks that match the search.
+     */
+    public void showMatchingTasks(List<Task> matchingTasks) {
+        if (matchingTasks.isEmpty()) {
+            System.out.println("No matching tasks found!");
+        } else {
+            System.out.println("Here are the matching tasks in your list:");
+            for (int i = 0; i < matchingTasks.size(); i++) {
+                System.out.println((i + 1) + "." + matchingTasks.get(i));
+            }
+        }
+    }
+
     public void showHelp() {
         System.out.println("Available commands:");
         System.out.println("  todo <description> - Add a todo task");
@@ -72,6 +91,7 @@ public class Ui {
         System.out.println("  mark <task number> - Mark a task as done");
         System.out.println("  unmark <task number> - Mark a task as not done");
         System.out.println("  delete <task number> - Delete a task");
+        System.out.println("  find <keyword> - Find tasks containing keyword");
         System.out.println("  help - Show this help message");
         System.out.println("  bye - Exit the program");
     }

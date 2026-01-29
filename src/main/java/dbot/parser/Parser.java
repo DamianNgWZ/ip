@@ -7,6 +7,7 @@ import dbot.task.Task;
 import dbot.task.Todo;
 
 public class Parser {
+    private static final int FIND_COMMAND_LENGTH = 5; // Length of "find "
 
     public static CommandType parseCommand(String input) {
         String lowerInput = input.toLowerCase().trim();
@@ -20,6 +21,9 @@ public class Parser {
         if (lowerInput.startsWith("todo ")) return CommandType.TODO;
         if (lowerInput.startsWith("deadline ")) return CommandType.DEADLINE;
         if (lowerInput.startsWith("event ")) return CommandType.EVENT;
+        if (lowerInput.startsWith("find")) {
+            return CommandType.FIND;
+        }
 
         return CommandType.UNKNOWN;
     }
@@ -39,5 +43,16 @@ public class Parser {
         } catch (NumberFormatException e) {
             throw new DbotException("OOPS!!! Please provide a valid task number!");
         }
+    }
+
+    /**
+     * Parses the keyword from a find command string.
+     * Extracts the search keyword after the "find " command prefix.
+     *
+     * @param input The full user input string (e.g., "find book").
+     * @return The keyword to search for.
+     */
+    public static String parseKeyword(String input) {
+        return input.substring(FIND_COMMAND_LENGTH).trim();
     }
 }

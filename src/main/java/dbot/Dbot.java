@@ -1,6 +1,8 @@
 package dbot;
 
 import java.io.IOException;
+import java.util.List;
+
 import dbot.exception.DbotException;
 import dbot.parser.CommandType;
 import dbot.parser.Parser;
@@ -48,6 +50,9 @@ public class Dbot {
                 case HELP: // Show help
                     ui.showHelp();
                     break;
+                case FIND: // Find tasks
+                    findTasks(input);
+                    break;
                 case MARK:
                 case UNMARK:
                     updateTask(input, command);
@@ -86,6 +91,17 @@ public class Dbot {
         }
         ui.showTaskMarked(task.toString(), isMark);
         saveTasks();  // Save after marking/unmarking
+    }
+
+    /**
+     * Finds and displays tasks that match the given keyword.
+     *
+     * @param input The user input string containing the find command and keyword.
+     */
+    private void findTasks(String input) {
+        String keyword = Parser.parseKeyword(input);
+        List<Task> matchingTasks = tasks.find(keyword);
+        ui.showMatchingTasks(matchingTasks);
     }
 
     private void deleteTask(String input) throws DbotException {
