@@ -6,10 +6,19 @@ import java.time.format.DateTimeParseException;
 import dbot.exception.DbotException;
 
 public class Event extends Task {
-    protected LocalDate from;
-    protected LocalDate to;
+    private static final int COMMAND_LENGTH = 6; // Length of "event "
+    private static final int FROM_PREFIX_LENGTH = 6; // Length of "/from "
+    private static final int TO_PREFIX_LENGTH = 4; // Length of "/to "
+    private static final int FILE_DESCRIPTION_INDEX = 2;
+    private static final int FILE_STATUS_INDEX = 1;
+    private static final int FILE_FROM_DATE_INDEX = 3;
+    private static final int FILE_TO_DATE_INDEX = 4;
+    private static final String DONE_STATUS = "DONE";
     private static final DateTimeFormatter INPUT_FORMAT = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     private static final DateTimeFormatter OUTPUT_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy");
+
+    protected LocalDate from;
+    protected LocalDate to;
 
     public Event(String description, LocalDate from, LocalDate to) {
         super(description);
@@ -25,9 +34,9 @@ public class Event extends Task {
             throw new DbotException("Please specify event with /from and /to");
         }
 
-        String description = input.substring(6, fromIndex).trim();
-        String fromString = input.substring(fromIndex + 6, toIndex).trim();
-        String toString = input.substring(toIndex + 4).trim();
+        String description = input.substring(COMMAND_LENGTH, fromIndex).trim();
+        String fromString = input.substring(fromIndex + FROM_PREFIX_LENGTH, toIndex).trim();
+        String toString = input.substring(toIndex + TO_PREFIX_LENGTH).trim();
 
         if (description.isEmpty() || fromString.isEmpty() || toString.isEmpty()) { // ensure from to not empty
             throw new DbotException("Description, start time and end time cannot be empty.");
@@ -48,10 +57,10 @@ public class Event extends Task {
             parts[i] = parts[i].trim();
         }
 
-        LocalDate from = LocalDate.parse(parts[3], INPUT_FORMAT);
-        LocalDate to = LocalDate.parse(parts[4], INPUT_FORMAT);
-        Event event = new Event(parts[2], from, to);
-        if (parts[1].equals("DONE")) {
+        LocalDate from = LocalDate.parse(parts[FILE_FROM_DATE_INDEX], INPUT_FORMAT);
+        LocalDate to = LocalDate.parse(parts[FILE_TO_DATE_INDEX], INPUT_FORMAT);
+        Event event = new Event(parts[FILE_DESCRIPTION_INDEX], from, to);
+        if (parts[FILE_STATUS_INDEX].equals(DONE_STATUS)) {
             event.markAsDone();
         }
         return event;

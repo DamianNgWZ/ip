@@ -6,9 +6,16 @@ import java.time.format.DateTimeParseException;
 import dbot.exception.DbotException;
 
 public class Deadline extends Task {
-    protected LocalDate by;
+    private static final int COMMAND_LENGTH = 9; // Length of "deadline "
+    private static final int BY_PREFIX_LENGTH = 4; // Length of "/by "
+    private static final int FILE_DESCRIPTION_INDEX = 2;
+    private static final int FILE_STATUS_INDEX = 1;
+    private static final int FILE_DATE_INDEX = 3;
+    private static final String DONE_STATUS = "DONE";
     private static final DateTimeFormatter INPUT_FORMAT = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     private static final DateTimeFormatter OUTPUT_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy");
+
+    protected LocalDate by;
 
     public Deadline(String description, LocalDate by) {
         super(description);
@@ -20,8 +27,8 @@ public class Deadline extends Task {
         if (byIndex == -1) {
             throw new DbotException("Please specify deadline with /by");
         }
-        String description = input.substring(9, byIndex).trim();
-        String byString = input.substring(byIndex + 4).trim();
+        String description = input.substring(COMMAND_LENGTH, byIndex).trim();
+        String byString = input.substring(byIndex + BY_PREFIX_LENGTH).trim();
 
         if (description.isEmpty() || byString.isEmpty()) {
             throw new DbotException("Description and deadline cannot be empty.");
@@ -41,9 +48,9 @@ public class Deadline extends Task {
             parts[i] = parts[i].trim();
         }
 
-        LocalDate by = LocalDate.parse(parts[3], INPUT_FORMAT);
-        Deadline deadline = new Deadline(parts[2], by);
-        if (parts[1].equals("DONE")) {
+        LocalDate by = LocalDate.parse(parts[FILE_DATE_INDEX], INPUT_FORMAT);
+        Deadline deadline = new Deadline(parts[FILE_DESCRIPTION_INDEX], by);
+        if (parts[FILE_STATUS_INDEX].equals(DONE_STATUS)) {
             deadline.markAsDone();
         }
         return deadline;
