@@ -116,7 +116,7 @@ public class Dbot {
             task.markAsUndone();
         }
         ui.showTaskMarked(task.toString(), isMark);
-        saveTasks();  // Save after marking/unmarking
+        saveTasks(); // Save after marking/unmarking
     }
 
     /**
@@ -129,7 +129,7 @@ public class Dbot {
         int index = Parser.parseTaskNumber(input, "delete ");
         Task removedTask = tasks.delete(index);
         ui.showTaskDeleted(removedTask.toString(), tasks.size());
-        saveTasks();  // Save after deleting
+        saveTasks(); // Save after deleting
     }
 
     /**
@@ -155,7 +155,7 @@ public class Dbot {
         Task task = Parser.parseTask(input, type);
         tasks.add(task);
         ui.showTaskAdded(task.toString(), tasks.size());
-        saveTasks();  // Save after adding
+        saveTasks(); // Save after adding
     }
 
     /**

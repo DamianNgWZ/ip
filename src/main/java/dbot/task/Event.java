@@ -3,6 +3,7 @@ package dbot.task;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+
 import dbot.exception.DbotException;
 
 /**
@@ -18,17 +19,17 @@ public class Event extends Task {
     private static final int FILE_FROM_DATE_INDEX = 3;
     private static final int FILE_TO_DATE_INDEX = 4;
     private static final String DONE_STATUS = "DONE";
-    /** The start date of this event. */
-    protected LocalDate from;
-
-    /** The end date of this event. */
-    protected LocalDate to;
-
     /** The date format used for parsing user input (dd-MM-yyyy). */
     private static final DateTimeFormatter INPUT_FORMAT = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
     /** The date format used for displaying dates to the user (MMM dd yyyy). */
     private static final DateTimeFormatter OUTPUT_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy");
+
+    /** The start date of this event. */
+    protected LocalDate from;
+
+    /** The end date of this event. */
+    protected LocalDate to;
 
     /**
      * Constructs an Event task with the given description, start date, and end date.
