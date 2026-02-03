@@ -68,10 +68,10 @@ public class Parser {
      */
     public static Task parseTask(String input, CommandType type) throws DbotException {
         return switch (type) {
-            case TODO -> Todo.parse(input);
-            case DEADLINE -> Deadline.parse(input);
-            case EVENT -> Event.parse(input);
-            default -> throw new DbotException("Cannot parse task for command type: " + type);
+        case TODO -> Todo.parse(input);
+        case DEADLINE -> Deadline.parse(input);
+        case EVENT -> Event.parse(input);
+        default -> throw new DbotException("Cannot parse task for command type: " + type);
         };
     }
 

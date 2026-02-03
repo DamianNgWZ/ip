@@ -14,14 +14,6 @@ public abstract class Task {
     protected boolean isDone;
 
     /**
-     * Returns the string representation of this task for saving to a file.
-     * The format is implementation-specific for each task type.
-     *
-     * @return The file format string representation of the task.
-     */
-    public abstract String toFileFormat();
-
-    /**
      * Constructs a Task with the given description.
      * The task is initially marked as not done.
      *
@@ -31,6 +23,14 @@ public abstract class Task {
         this.description = description;
         this.isDone = false;
     }
+
+    /**
+     * Returns the string representation of this task for saving to a file.
+     * The format is implementation-specific for each task type.
+     *
+     * @return The file format string representation of the task.
+     */
+    public abstract String toFileFormat();
 
     /**
      * Returns the status icon representing the completion status of the task.
