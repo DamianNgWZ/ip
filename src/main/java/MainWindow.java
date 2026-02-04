@@ -34,6 +34,11 @@ public class MainWindow extends AnchorPane {
     /** Injects the Dbot instance */
     public void setDbot(Dbot d) {
         dbot = d;
+        // Show welcome message when GUI starts
+        String welcomeMessage = "Hello! I'm Dbot\nWhat can I do for you?";
+        dialogContainer.getChildren().add(
+                DialogBox.getDbotDialog(welcomeMessage, dbotImage)
+        );
     }
 
     /**
