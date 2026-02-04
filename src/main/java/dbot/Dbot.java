@@ -171,6 +171,59 @@ public class Dbot {
     }
 
     /**
+     * Generates a response for the user's chat message.
+     * This method is used by the GUI to get Dbot's response without using the CLI.
+     *
+     * @param input The user's input string.
+     * @return Dbot's response as a String.
+     */
+    public String getResponse(String input) {
+        try {
+            CommandType command = Parser.parseCommand(input);
+            switch (command) {
+            case BYE:
+                return ui.getGoodbyeMessage();
+            case LIST:
+                return ui.getTaskListMessage(tasks.getFormattedList());
+            case HELP:
+                return ui.getHelpMessage();
+            case FIND:
+                String keyword = Parser.parseKeyword(input);
+                List<Task> matchingTasks = tasks.find(keyword);
+                return ui.getMatchingTasksMessage(matchingTasks);
+            case MARK:
+            case UNMARK:
+                boolean isMark = (command == CommandType.MARK);
+                int markIndex = Parser.parseTaskNumber(input, isMark ? "mark " : "unmark ");
+                Task markTask = tasks.get(markIndex);
+                if (isMark) {
+                    markTask.markAsDone();
+                } else {
+                    markTask.markAsUndone();
+                }
+                saveTasks();
+                return ui.getTaskMarkedMessage(markTask.toString(), isMark);
+            case DELETE:
+                int deleteIndex = Parser.parseTaskNumber(input, "delete ");
+                Task removedTask = tasks.delete(deleteIndex);
+                saveTasks();
+                return ui.getTaskDeletedMessage(removedTask.toString(), tasks.size());
+            case TODO:
+            case DEADLINE:
+            case EVENT:
+                Task newTask = Parser.parseTask(input, command);
+                tasks.add(newTask);
+                saveTasks();
+                return ui.getTaskAddedMessage(newTask.toString(), tasks.size());
+            default:
+                return "Unknown command! Type 'help' to see available commands.";
+            }
+        } catch (DbotException e) {
+            return e.getMessage();
+        }
+    }
+
+    /**
      * The entry point of the Dbot application.
      * Creates a new Dbot instance and starts the chatbot.
      *

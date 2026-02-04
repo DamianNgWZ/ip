@@ -167,4 +167,103 @@ public class Ui {
     public void close() {
         scanner.close();
     }
+
+    /**
+     * Returns the task added message as a string.
+     *
+     * @param task The string representation of the added task.
+     * @param taskCount The total number of tasks after adding.
+     * @return The formatted message string.
+     */
+    public String getTaskAddedMessage(String task, int taskCount) {
+        return "Got it. I've added this task:\n  " + task
+                + "\nNow you have " + taskCount + " tasks in the list.";
+    }
+
+    /**
+     * Returns the task deleted message as a string.
+     *
+     * @param task The string representation of the deleted task.
+     * @param taskCount The total number of tasks after deletion.
+     * @return The formatted message string.
+     */
+    public String getTaskDeletedMessage(String task, int taskCount) {
+        return "Noted. I've removed this task:\n  " + task
+                + "\nNow you have " + taskCount + " tasks in the list.";
+    }
+
+    /**
+     * Returns the task marked message as a string.
+     *
+     * @param task The string representation of the task.
+     * @param isDone Whether the task was marked as done (true) or not done (false).
+     * @return The formatted message string.
+     */
+    public String getTaskMarkedMessage(String task, boolean isDone) {
+        if (isDone) {
+            return "Nice! I've marked this task as done:\n  " + task;
+        } else {
+            return "OK, I've marked this task as not done yet:\n  " + task;
+        }
+    }
+
+    /**
+     * Returns the task list as a string.
+     *
+     * @param list The formatted string containing all tasks.
+     * @return The formatted list message string.
+     */
+    public String getTaskListMessage(String list) {
+        if (list.isEmpty()) {
+            return "No tasks in your list yet!";
+        } else {
+            return "Here are the tasks in your list:\n" + list;
+        }
+    }
+
+    /**
+     * Returns the help message as a string.
+     *
+     * @return The help message string.
+     */
+    public String getHelpMessage() {
+        return "Available commands:\n"
+                + " todo <description> - Add a todo task\n"
+                + " deadline <description> /by <dd-MM-yyyy> - Add a deadline task\n"
+                + " event <description> /from <dd-MM-yyyy> /to <dd-MM-yyyy> - Add an event task\n"
+                + " list - Show all tasks\n"
+                + " mark <number> - Mark a task as done\n"
+                + " unmark <number> - Mark a task as not done\n"
+                + " delete <number> - Delete a task\n"
+                + " find <keyword> - Find tasks containing keyword\n"
+                + " help - Show this help message\n"
+                + " bye - Exit the program";
+    }
+
+    /**
+     * Returns the matching tasks message as a string.
+     *
+     * @param matchingTasks The list of tasks that match the search.
+     * @return The formatted matching tasks message string.
+     */
+    public String getMatchingTasksMessage(List<Task> matchingTasks) {
+        if (matchingTasks.isEmpty()) {
+            return "No matching tasks found!";
+        } else {
+            StringBuilder sb = new StringBuilder("Here are the matching tasks in your list:\n");
+            for (int i = 0; i < matchingTasks.size(); i++) {
+                sb.append((i + 1)).append(".").append(matchingTasks.get(i)).append("\n");
+            }
+            return sb.toString();
+        }
+    }
+
+    /**
+     * Returns the goodbye message as a string.
+     *
+     * @return The goodbye message string.
+     */
+    public String getGoodbyeMessage() {
+        return "Bye. Hope to see you again soon!";
+    }
 }
