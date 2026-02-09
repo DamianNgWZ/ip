@@ -100,6 +100,16 @@ public class Deadline extends Task {
                 + this.description + " | " + this.by.format(INPUT_FORMAT);
     }
 
+    /**
+     * Returns the date associated with this Deadline.
+     *
+     * @return The deadline date.
+     */
+    @Override
+    public LocalDate getDate() {
+        return this.by;
+    }
+
     @Override
     public String toString() {
         return "[D]" + super.toString() + " (by: " + this.by.format(OUTPUT_FORMAT) + ")";

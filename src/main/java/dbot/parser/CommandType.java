@@ -5,5 +5,5 @@ package dbot.parser;
  * Includes task commands (TODO, DEADLINE, EVENT) and action commands (LIST, MARK, UNMARK, DELETE, HELP, BYE, FIND).
  */
 public enum CommandType {
-    TODO, DEADLINE, EVENT, LIST, MARK, UNMARK, DELETE, HELP, BYE, UNKNOWN, FIND
+    TODO, DEADLINE, EVENT, LIST, MARK, UNMARK, DELETE, HELP, BYE, UNKNOWN, FIND, SORT
 }

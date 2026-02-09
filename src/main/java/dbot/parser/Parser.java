@@ -53,6 +53,9 @@ public class Parser {
         if (lowerInput.startsWith("find")) {
             return CommandType.FIND;
         }
+        if (lowerInput.startsWith("sort")) {
+            return CommandType.SORT;
+        }
 
         return CommandType.UNKNOWN;
     }

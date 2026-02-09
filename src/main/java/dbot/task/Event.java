@@ -113,6 +113,17 @@ public class Event extends Task {
                 + this.from.format(INPUT_FORMAT) + " | " + this.to.format(INPUT_FORMAT);
     }
 
+    /**
+     * Returns the date associated with this Event.
+     * For sorting purposes, uses the start date (from).
+     *
+     * @return The start date of the event.
+     */
+    @Override
+    public LocalDate getDate() {
+        return this.from;
+    }
+
     @Override
     public String toString() {
         return "[E]" + super.toString() + " (from: " + from.format(OUTPUT_FORMAT)

@@ -1,5 +1,7 @@
 package dbot.task;
 
+import java.time.LocalDate;
+
 /**
  * Represents a task in the task list.
  * A Task has a description and a completion status.
@@ -33,6 +35,14 @@ public abstract class Task {
      * @return The file format string representation of the task.
      */
     public abstract String toFileFormat();
+
+    /**
+     * Returns the date associated with this task for sorting purposes.
+     * Returns null for Todo tasks (which have no date).
+     *
+     * @return The LocalDate of the task, or null if no date exists.
+     */
+    public abstract LocalDate getDate();
 
     /**
      * Returns the status icon representing the completion status of the task.
