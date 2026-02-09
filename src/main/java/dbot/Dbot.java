@@ -55,18 +55,16 @@ public class Dbot {
                 CommandType command = Parser.parseCommand(input);
 
                 switch (command) {
-                case BYE: // Terminating condition
-                    ui.showGoodbye();
-                    ui.showLine();
-                    ui.close();
-                    return; // Exit run() method
-                case LIST: // Print list
+                case BYE:
+                    handleBye();
+                    return;
+                case LIST:
                     showList();
                     break;
-                case HELP: // Show help
+                case HELP:
                     ui.showHelp();
                     break;
-                case FIND: // Find tasks
+                case FIND:
                     findTasks(input);
                     break;
                 case MARK:
@@ -81,7 +79,7 @@ public class Dbot {
                 case EVENT:
                     addTask(input, command);
                     break;
-                default: // Unknown command
+                default:
                     throw new DbotException("Unknown command! Type 'help' to see available commands.");
                 }
             } catch (DbotException e) {
@@ -89,6 +87,15 @@ public class Dbot {
             }
             ui.showLine();
         }
+    }
+
+    /**
+     * Handles the bye command by displaying goodbye message and closing resources.
+     */
+    private void handleBye() {
+        ui.showGoodbye();
+        ui.showLine();
+        ui.close();
     }
 
     /**
@@ -116,7 +123,7 @@ public class Dbot {
             task.markAsUndone();
         }
         ui.showTaskMarked(task.toString(), isMark);
-        saveTasks(); // Save after marking/unmarking
+        saveTasks();
     }
 
     /**
@@ -129,7 +136,7 @@ public class Dbot {
         int index = Parser.parseTaskNumber(input, "delete ");
         Task removedTask = tasks.delete(index);
         ui.showTaskDeleted(removedTask.toString(), tasks.size());
-        saveTasks(); // Save after deleting
+        saveTasks();
     }
 
     /**
@@ -155,7 +162,7 @@ public class Dbot {
         Task task = Parser.parseTask(input, type);
         tasks.add(task);
         ui.showTaskAdded(task.toString(), tasks.size());
-        saveTasks(); // Save after adding
+        saveTasks();
     }
 
     /**
@@ -178,49 +185,106 @@ public class Dbot {
      * @return Dbot's response as a String.
      */
     public String getResponse(String input) {
+        assert input != null : "Input should not be null";
+
         try {
             CommandType command = Parser.parseCommand(input);
             switch (command) {
             case BYE:
                 return ui.getGoodbyeMessage();
             case LIST:
-                return ui.getTaskListMessage(tasks.getFormattedList());
+                return getListResponse();
             case HELP:
                 return ui.getHelpMessage();
             case FIND:
-                String keyword = Parser.parseKeyword(input);
-                List<Task> matchingTasks = tasks.find(keyword);
-                return ui.getMatchingTasksMessage(matchingTasks);
+                return getFindResponse(input);
             case MARK:
             case UNMARK:
-                boolean isMark = (command == CommandType.MARK);
-                int markIndex = Parser.parseTaskNumber(input, isMark ? "mark " : "unmark ");
-                Task markTask = tasks.get(markIndex);
-                if (isMark) {
-                    markTask.markAsDone();
-                } else {
-                    markTask.markAsUndone();
-                }
-                saveTasks();
-                return ui.getTaskMarkedMessage(markTask.toString(), isMark);
+                return getMarkUnmarkResponse(input, command);
             case DELETE:
-                int deleteIndex = Parser.parseTaskNumber(input, "delete ");
-                Task removedTask = tasks.delete(deleteIndex);
-                saveTasks();
-                return ui.getTaskDeletedMessage(removedTask.toString(), tasks.size());
+                return getDeleteResponse(input);
             case TODO:
             case DEADLINE:
             case EVENT:
-                Task newTask = Parser.parseTask(input, command);
-                tasks.add(newTask);
-                saveTasks();
-                return ui.getTaskAddedMessage(newTask.toString(), tasks.size());
+                return getAddTaskResponse(input, command);
             default:
                 return "Unknown command! Type 'help' to see available commands.";
             }
         } catch (DbotException e) {
             return e.getMessage();
         }
+    }
+
+    /**
+     * Gets the response for listing all tasks.
+     *
+     * @return The formatted list of tasks.
+     */
+    private String getListResponse() {
+        return ui.getTaskListMessage(tasks.getFormattedList());
+    }
+
+    /**
+     * Gets the response for finding tasks by keyword.
+     *
+     * @param input The user input containing the find command.
+     * @return The formatted list of matching tasks.
+     */
+    private String getFindResponse(String input) {
+        String keyword = Parser.parseKeyword(input);
+        List<Task> matchingTasks = tasks.find(keyword);
+        return ui.getMatchingTasksMessage(matchingTasks);
+    }
+
+    /**
+     * Gets the response for marking or unmarking a task.
+     *
+     * @param input The user input containing the command and task number.
+     * @param command The command type (MARK or UNMARK).
+     * @return The confirmation message.
+     * @throws DbotException If the task number is invalid.
+     */
+    private String getMarkUnmarkResponse(String input, CommandType command) throws DbotException {
+        boolean isMark = (command == CommandType.MARK);
+        int markIndex = Parser.parseTaskNumber(input, isMark ? "mark " : "unmark ");
+        Task markTask = tasks.get(markIndex);
+
+        if (isMark) {
+            markTask.markAsDone();
+        } else {
+            markTask.markAsUndone();
+        }
+        saveTasks();
+        return ui.getTaskMarkedMessage(markTask.toString(), isMark);
+    }
+
+    /**
+     * Gets the response for deleting a task.
+     *
+     * @param input The user input containing the delete command and task number.
+     * @return The confirmation message.
+     * @throws DbotException If the task number is invalid.
+     */
+    private String getDeleteResponse(String input) throws DbotException {
+        int deleteIndex = Parser.parseTaskNumber(input, "delete ");
+        Task removedTask = tasks.delete(deleteIndex);
+        saveTasks();
+        return ui.getTaskDeletedMessage(removedTask.toString(), tasks.size());
+    }
+
+    /**
+     * Gets the response for adding a new task.
+     *
+     * @param input The user input containing the task details.
+     * @param command The command type (TODO, DEADLINE, or EVENT).
+     * @return The confirmation message.
+     * @throws DbotException If the input format is invalid.
+     */
+    private String getAddTaskResponse(String input, CommandType command) throws DbotException {
+        Task newTask = Parser.parseTask(input, command);
+        tasks.add(newTask);
+        saveTasks();
+        return ui.getTaskAddedMessage(newTask.toString(), tasks.size());
     }
 
     /**
