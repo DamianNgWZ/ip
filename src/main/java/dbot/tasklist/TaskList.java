@@ -48,6 +48,8 @@ public class TaskList {
      * @throws DbotException If the index is out of range.
      */
     public Task delete(int index) throws DbotException {
+        assert index >= -1 : "Index should not be less than -1";
+        assert tasks != null : "Task list should be initialized";
         if (index < 0 || index >= tasks.size()) {
             throw new DbotException("OOPS!!! dbot.task.Task number does not exist.");
         }
@@ -62,6 +64,8 @@ public class TaskList {
      * @throws DbotException If the index is out of range.
      */
     public Task get(int index) throws DbotException {
+        assert index >= -1 : "Index should not be less than -1";
+        assert tasks != null : "Task list should be initialized";
         if (index < 0 || index >= tasks.size()) {
             throw new DbotException("OOPS!!! dbot.task.Task number does not exist.");
         }
