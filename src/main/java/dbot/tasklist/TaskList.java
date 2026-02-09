@@ -1,6 +1,7 @@
 package dbot.tasklist;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -125,5 +126,15 @@ public class TaskList {
             sb.append(i + 1).append(".").append(tasks.get(i)).append("\n");
         }
         return sb.toString();
+    }
+
+    /**
+     * Sorts the tasks in the task list chronologically.
+     * Tasks with dates (Deadline, Event) are sorted by date.
+     * Tasks without dates (Todo) appear at the end, sorted alphabetically by description.
+     */
+    public void sort() {
+        tasks.sort(Comparator.comparing(Task::getDate, Comparator.nullsLast(Comparator.naturalOrder()))
+                .thenComparing(task -> task.toString().toLowerCase()));
     }
 }

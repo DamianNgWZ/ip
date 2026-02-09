@@ -259,6 +259,15 @@ public class Ui {
     }
 
     /**
+     * Returns the sort confirmation message as a String for GUI.
+     *
+     * @return The sort confirmation message.
+     */
+    public String getSortConfirmationMessage() {
+        return "Tasks have been sorted!";
+    }
+
+    /**
      * Returns the goodbye message as a string.
      *
      * @return The goodbye message string.

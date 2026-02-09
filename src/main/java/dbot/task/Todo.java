@@ -1,5 +1,7 @@
 package dbot.task;
 
+import java.time.LocalDate;
+
 import dbot.exception.DbotException;
 
 /**
@@ -66,6 +68,17 @@ public class Todo extends Task {
     @Override
     public String toFileFormat() {
         return "T | " + (this.isDone ? "DONE" : "NOT DONE") + " | " + this.description;
+    }
+
+    /**
+     * Returns the date associated with this Todo.
+     * Todos have no date, so this returns null.
+     *
+     * @return null
+     */
+    @Override
+    public LocalDate getDate() {
+        return null;
     }
 
     @Override

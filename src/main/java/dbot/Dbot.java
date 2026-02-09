@@ -197,6 +197,11 @@ public class Dbot {
                 return ui.getHelpMessage();
             case FIND:
                 return getFindResponse(input);
+            case SORT:
+                tasks.sort();
+                return ui.getSortConfirmationMessage()
+                        + "\n"
+                        + ui.getTaskListMessage(tasks.getFormattedList());
             case MARK:
             case UNMARK:
                 return getMarkUnmarkResponse(input, command);
