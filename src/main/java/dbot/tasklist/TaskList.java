@@ -2,6 +2,7 @@ package dbot.tasklist;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import dbot.exception.DbotException;
 import dbot.task.Task;
@@ -84,13 +85,9 @@ public class TaskList {
      * @return A list of tasks that match the keyword.
      */
     public List<Task> find(String keyword) {
-        List<Task> matchingTasks = new ArrayList<>();
-        for (Task task : tasks) {
-            if (task.toString().toLowerCase().contains(keyword.toLowerCase())) {
-                matchingTasks.add(task);
-            }
-        }
-        return matchingTasks;
+        return tasks.stream()
+                .filter(task -> task.toString().toLowerCase().contains(keyword.toLowerCase()))
+                .collect(Collectors.toList());
     }
 
     /**
