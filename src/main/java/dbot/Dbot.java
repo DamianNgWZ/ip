@@ -178,6 +178,7 @@ public class Dbot {
      * @return Dbot's response as a String.
      */
     public String getResponse(String input) {
+        assert input != null : "Input cannot be null";
         try {
             CommandType command = Parser.parseCommand(input);
             switch (command) {
