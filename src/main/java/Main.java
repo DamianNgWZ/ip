@@ -7,7 +7,6 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-
 /**
  * A GUI for Dbot using FXML.
  */
@@ -22,6 +21,10 @@ public class Main extends Application {
             AnchorPane ap = fxmlLoader.load();
             Scene scene = new Scene(ap);
             stage.setScene(scene);
+            stage.setTitle("Dbot"); // Set window title
+            stage.setMinHeight(400); // Minimum height
+            stage.setMinWidth(350); // Minimum width
+            stage.setResizable(true); // Enable resizing
             fxmlLoader.<MainWindow>getController().setDbot(dbot);
             stage.show();
         } catch (IOException e) {

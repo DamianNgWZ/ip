@@ -44,6 +44,11 @@ public class DialogBox extends HBox {
         Collections.reverse(tmp);
         getChildren().setAll(tmp);
         setAlignment(Pos.TOP_LEFT);
+
+        // Style for bot messages (different background)
+        dialog.setStyle("-fx-background-color: #E3F2FD; -fx-background-radius: 10px; "
+                + "-fx-padding: 12px; -fx-font-size: 13px; -fx-text-fill: #333333; "
+                + "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 2);");
     }
 
     public static DialogBox getUserDialog(String text, Image img) {
