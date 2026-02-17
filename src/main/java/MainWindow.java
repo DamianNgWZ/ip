@@ -49,10 +49,17 @@ public class MainWindow extends AnchorPane {
     private void handleUserInput() {
         String input = userInput.getText();
         String response = dbot.getResponse(input);
+
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
                 DialogBox.getDbotDialog(response, dbotImage)
         );
+
         userInput.clear();
+
+        // Auto-close app when user types 'bye'
+        if (input.trim().toLowerCase().equals("bye")) {
+            javafx.application.Platform.exit();
+        }
     }
 }
