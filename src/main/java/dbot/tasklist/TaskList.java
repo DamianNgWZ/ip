@@ -52,7 +52,7 @@ public class TaskList {
         assert index >= -1 : "Index should not be less than -1";
         assert tasks != null : "Task list should be initialized";
         if (index < 0 || index >= tasks.size()) {
-            throw new DbotException("OOPS!!! dbot.task.Task number does not exist.");
+            throw new DbotException("OOPS!!! Task number does not exist.");
         }
         return tasks.remove(index);
     }
@@ -68,7 +68,7 @@ public class TaskList {
         assert index >= -1 : "Index should not be less than -1";
         assert tasks != null : "Task list should be initialized";
         if (index < 0 || index >= tasks.size()) {
-            throw new DbotException("OOPS!!! dbot.task.Task number does not exist.");
+            throw new DbotException("OOPS!!! Task number does not exist.");
         }
         return tasks.get(index);
     }
